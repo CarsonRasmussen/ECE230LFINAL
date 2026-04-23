@@ -66,7 +66,7 @@ module stopwatch(
         .D(DConnect[5]),
         .Clock(clk),
         .Reset(CountOut),
-        .Q(state[5),
+        .Q(state[5]),
         .NotQ(Connect[5])
     );
     
