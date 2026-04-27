@@ -3,27 +3,24 @@ module stopwatch(
     input en,
     input clk,
     input rst,
-    output out,
     output [5:0] state //6-bits to represent the highest number 59
 );
     
     wire [5:0] Connect;
     wire [5:0] DConnect;
+    wire [5:0] NextState;
     wire Connect1;
     wire Connect2;
     wire Connect3;
     wire Connect4;
     wire Connect5;
-    wire Connect6;
-    wire ConnectOut;
     wire CountOut;
-    wire OutD;
     
-    assign CountOut = (state[2] & ~state[1] & state[0]) | rst;
-    assign OutD = out ^ CountOut;     
+    assign CountOut = (state[5] & state[4] & state[3] & ~state[2] & state[1] & state[0]) | rst;
+    assign NextState = en ? DConnect : state;  
 
     dff dff1(
-        .D(DConnect[0]),
+        .D(NextState[0]),
         .Clock(clk),
         .Reset(CountOut),
         .Q(state[0]),
@@ -31,7 +28,7 @@ module stopwatch(
     );
     
     dff dff2(
-        .D(DConnect[1]),
+        .D(NextState[1]),
         .Clock(clk),
         .Reset(CountOut),
         .Q(state[1]),
@@ -39,7 +36,7 @@ module stopwatch(
     );
 
     dff dff3(
-        .D(DConnect[2]),
+        .D(NextState[2]),
         .Clock(clk),
         .Reset(CountOut),
         .Q(state[2]),
@@ -47,7 +44,7 @@ module stopwatch(
     );
 
     dff dff4(
-        .D(DConnect[3]),
+        .D(NextState[3]),
         .Clock(clk),
         .Reset(CountOut),
         .Q(state[3]),
@@ -55,7 +52,7 @@ module stopwatch(
     );
     
     dff dff5(
-        .D(DConnect[4]),
+        .D(NextState[4]),
         .Clock(clk),
         .Reset(CountOut),
         .Q(state[4]),
@@ -63,19 +60,11 @@ module stopwatch(
     );
 
     dff dff6(
-        .D(DConnect[5]),
+        .D(NextState[5]),
         .Clock(clk),
         .Reset(CountOut),
         .Q(state[5]),
         .NotQ(Connect[5])
-    );
-    
-    dff dffout(
-        .D(OutD),
-        .Clock(clk),
-        .Reset(rst),
-        .Q(out),
-        .NotQ(ConnectOut)
     );
     
     full_adder adder1(
@@ -107,7 +96,7 @@ module stopwatch(
         .B(1'b0),
         .Cin(Connect3),
         .Cout(Connect4),
-        .Y(DConnect[2])
+        .Y(DConnect[3])
     );
 
     full_adder adder5(
@@ -115,15 +104,15 @@ module stopwatch(
         .B(1'b0),
         .Cin(Connect4),
         .Cout(Connect5),
-        .Y(DConnect[2])
+        .Y(DConnect[4])
     );
 
      full_adder adder6(
         .A(state[5]),
         .B(1'b0),
         .Cin(Connect5),
-        .Cout(Connect6),
-        .Y(DConnect[2])
+        .Cout(),
+        .Y(DConnect[5])
     );
    
 endmodule
