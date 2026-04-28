@@ -46,14 +46,15 @@ wire run    = sw[1];        // 0 = pause (circuit holds it state), 1 = run (coun
 wire load   = sw[2];        // 1 = load value from load_value into timer counter, 0 = do nothing
 wire [5:0] load_value = sw[15:10];      //Set Timer Value (Value to load in timer)
 
-//timer & stopwatch leds
+//counter output wires
 wire [5:0] stopwatch_cnt;
 wire [5:0] timer_cnt;
 
+//stopwatch/timer leds
 assign led[8:3] = stopwatch_cnt;
 assign led[15:10] = timer_cnt;
 
-//enable signals
+//enable signals; run only in stopwatch mode or timer mode
 wire stopwatch_en = ~mode & run;
 wire timer_en = mode & run;
 

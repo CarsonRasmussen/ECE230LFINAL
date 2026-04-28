@@ -2,8 +2,7 @@ module dff(
     input D,
     input Clock,
     input Reset,
-    output reg Q,
-    output NotQ
+    output reg Q
 );
 
     initial begin
@@ -15,7 +14,5 @@ module dff(
             Q <= 1'b0;
         else
             Q <= D;
-
-    assign NotQ = ~Q;
     
 endmodule
