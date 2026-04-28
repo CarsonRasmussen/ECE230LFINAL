@@ -45,15 +45,37 @@ wire mode   = sw[0];        // 0 = stopwatch, 1= timer
 wire run    = sw[1];        // 0 = pause (circuit holds it state), 1 = run (counter increments/decrements)
 wire load   = sw[2];        // 1 = load value from load_value into timer counter, 0 = do nothing
 wire [5:0] load_value = sw[15:10];      //Set Timer Value (Value to load in timer)
-wire [5:0] timer_cnt;
+
+//timer & stopwatch leds
 wire [5:0] stopwatch_cnt;
+wire [5:0] timer_cnt;
+
+assign led[8:3] = stopwatch_cnt;
+assign led[15:10] = timer_cnt;
+
+//enable signals
+wire stopwatch_en = ~mode & run;
+wire timer_en = mode & run;
+
 
 //Stopwatch Module Instance
 //Use "clk_1Hz" as clock signal to stopwatch and timer modules
-
+stopwatch part1(
+    .clk(clk_1Hz),
+    .rst(btnC),
+    .state(stopwatch_cnt),
+    .en(stopwatch_en)
+);
 
 //Timer Module Instance
 //Use "clk_1Hz" as clock signal to stopwatch and timer modules
-
+timer part2(
+    .clk(clk_1Hz),
+    .rst(btnC),
+    .state(timer_cnt),
+    .load(load),
+    .load_value(load_value),
+    .en(timer_en)
+);
 
 endmodule
